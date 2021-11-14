@@ -1,0 +1,45 @@
+{
+  "name": "svelte-strip",
+  "version": "1.0.0",
+  "description": "Strip types from Svelte files.",
+  "bin": {
+    "svelte-strip": "svelte-strip"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sciactive/svelte-strip.git"
+  },
+  "keywords": [
+    "svelte",
+    "typescript",
+    "strip",
+    "types",
+    "type"
+  ],
+  "author": "Hunter Perrin <hperrin@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/sciactive/svelte-strip/issues"
+  },
+  "homepage": "https://github.com/sciactive/svelte-strip#readme",
+  "peerDependencies": {
+    "svelte": "^3.0.0"
+  },
+  "dependencies": {
+    "glob": "^7.2.0",
+    "glob-promise": "^4.2.2",
+    "minimatch": "^3.0.4",
+    "svelte-preprocess": "^4.9.8",
+    "typescript": "^4.4.4",
+    "yargs": "^17.2.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
+    "husky": "^7.0.4"
+  }
+}
