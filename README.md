@@ -2,6 +2,16 @@
 
 Strip types from Svelte files. This can help you release both a TypeScript and a vanilla JS version of a library.
 
+# Installation
+
+```sh
+npm install -D svelte-strip
+```
+
+# Usage
+
+See `npx svelte-strip --help`.
+
 # License
 
 Copyright 2021 SciActive Inc
