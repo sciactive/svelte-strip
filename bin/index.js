@@ -77,7 +77,12 @@ yargs(hideBin(process.argv))
       const stats = await fs.promises.stat(input);
 
       if (stats.isDirectory()) {
-        const files = await glob(resolve(input, "**", globPattern));
+        let files = await glob(resolve(input, "**", globPattern), {});
+
+        if (sep === "\\") {
+          files = files.map((path) => path.replaceAll("/", sep));
+        }
+
         const inpath = resolve(input);
         for (const file of files) {
           if (
