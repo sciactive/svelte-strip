@@ -6,17 +6,82 @@ const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const glob = require("glob-promise");
 const minimatch = require("minimatch");
+const Generator = require("svelte-dts/dist/generator");
+const { transpileModule } = require("typescript");
+
+const { getTagInfo } = require("svelte-preprocess/dist/modules/tagInfo");
+const { concat } = require("svelte-preprocess/dist/modules/utils");
+const {
+  prepareContent,
+} = require("svelte-preprocess/dist/modules/prepareContent");
 
 const { typescript } = sveltePreprocess;
 
-async function strip(filename, target, maps) {
-  const { code, map } = await preprocess(
-    (await fs.promises.readFile(filename)).toString(),
-    [typescript()],
+async function strip(filename, target, maps, declarations) {
+  const source = (await fs.promises.readFile(filename)).toString();
+  const output = await preprocess(
+    source,
+    [
+      // sveltePreprocess({
+      //   typescript({ content }) {
+      //     console.log({ content });
+      //     const pre = typescript({ reportDiagnostics: true });
+      //     console.log({ pre });
+      //     const output = pre.script(content, {
+      //       declarations: true,
+      //     });
+      //     console.log({ output, declarations: output.declarations });
+      //     return {
+      //       code: output.outputText,
+      //       map: output.sourceMapText,
+      //     };
+      //   },
+      // }),
+      // typescript({ reportDiagnostics: true }),
+      {
+        async script(svelteFile) {
+          const { transformer } = await import(
+            "svelte-preprocess/dist/transformers/typescript.js"
+          );
+          const options = {
+            reportDiagnostics: true,
+            compilerOptions: {
+              declarations: true,
+            },
+          };
+          let { content, markup, filename, attributes, lang, dependencies } =
+            await getTagInfo(svelteFile);
+
+          if (lang !== "typescript") {
+            return { code: content };
+          }
+
+          content = prepareContent({ options, content });
+
+          const transformed = await transformer({
+            content,
+            markup,
+            filename,
+            attributes,
+            options,
+          });
+
+          console.log(transformed);
+
+          return {
+            ...transformed,
+            dependencies: concat(dependencies, transformed.dependencies),
+          };
+        },
+      },
+    ],
     {
       filename,
     }
   );
+
+  console.log({ output });
+  const { code, map } = output;
 
   await fs.promises.writeFile(
     target,
@@ -26,6 +91,15 @@ async function strip(filename, target, maps) {
   if (maps) {
     await fs.promises.writeFile(`${target}.map`, JSON.stringify(map));
   }
+
+  // if (declarations) {
+  //   const generator = new Generator.default(filename, {
+  //     output: `${target}.d.ts`,
+  //     extensions: [".svelte"],
+  //   });
+  //   await generator.read();
+  //   await generator.write();
+  // }
 }
 
 async function makeDirectoryStructure(filename) {
@@ -56,6 +130,12 @@ yargs(hideBin(process.argv))
             alias: "m",
             type: "boolean",
             description: "Whether to include source maps.",
+            default: true,
+          },
+          declarations: {
+            alias: "d",
+            type: "boolean",
+            description: "Whether to include declaration files.",
             default: true,
           },
           "glob-pattern": {
@@ -96,11 +176,11 @@ yargs(hideBin(process.argv))
           );
 
           await makeDirectoryStructure(outfile);
-          await strip(infile, outfile, argv.maps);
+          await strip(infile, outfile, argv.maps, argv.declarations);
         }
       } else if (stats.isFile() || stats.isFIFO()) {
         await makeDirectoryStructure(output);
-        await strip(input, output, argv.maps);
+        await strip(input, output, argv.maps, argv.declarations);
       } else {
         console.error("Input does not seem to be a file, directory, or pipe.");
         process.exit(1);
