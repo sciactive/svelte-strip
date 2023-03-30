@@ -4,7 +4,7 @@ const { preprocess } = require("svelte/compiler");
 const sveltePreprocess = require("svelte-preprocess");
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
-const glob = require("glob-promise");
+const { glob } = require("glob");
 const minimatch = require("minimatch");
 
 const { typescript } = sveltePreprocess;

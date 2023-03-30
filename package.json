@@ -7,7 +7,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./bin/index.js strip test.svelte test-out.svelte && test \"$(cat test-out.svelte)\" == \"$(cat test-out.reference.svelte)\" && echo Pass. || echo Fail. && false"
   },
   "repository": {
     "type": "git",
@@ -30,16 +30,15 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "glob": "^8.0.3",
-    "glob-promise": "^5.0.0",
-    "minimatch": "^5.1.0",
-    "svelte-preprocess": "^4.10.7",
-    "typescript": "^4.9.3",
-    "yargs": "^17.6.2"
+    "glob": "^9.3.2",
+    "minimatch": "^7.4.3",
+    "svelte-preprocess": "^5.0.3",
+    "typescript": "^5.0.2",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.3.0",
-    "husky": "^8.0.2"
+    "@commitlint/cli": "^17.5.1",
+    "@commitlint/config-conventional": "^17.4.4",
+    "husky": "^8.0.3"
   }
 }
