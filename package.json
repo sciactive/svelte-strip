@@ -1,6 +1,6 @@
 {
   "name": "svelte-strip",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Strip types from Svelte files.",
   "bin": {
     "svelte-strip": "svelte-strip"
