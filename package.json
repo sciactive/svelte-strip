@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/sciactive/svelte-strip#readme",
   "peerDependencies": {
-    "svelte": "^3.0.0"
+    "svelte": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
     "glob": "^9.3.2",
