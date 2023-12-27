@@ -26,7 +26,7 @@ async function strip(filename, target, maps) {
         "$1$2"
       )
       .replace(
-        /(<script\s*?[^>]*?)\s*\bgenerics\s*=\s*(?:(["'`])[^"'`]*\2|[^ >]+)([^>]*>)/g,
+        /(<script\s*?[^>]*?)\s*\bgenerics\s*=\s*(?:(["'`]).*?\2|[^'"`>][^ >]*)([^>]*>)/g,
         "$1$3"
       )
   );
