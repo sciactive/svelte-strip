@@ -20,10 +20,15 @@ async function strip(filename, target, maps) {
 
   await fs.promises.writeFile(
     target,
-    code.replace(
-      /(<script\s*?[^>]*?)\s*\blang\s*=\s*["'`]?ts["'`]?([^>]*>)/g,
-      "$1$2"
-    )
+    code
+      .replace(
+        /(<script\s*?[^>]*?)\s*\blang\s*=\s*["'`]?ts["'`]?([^>]*>)/g,
+        "$1$2"
+      )
+      .replace(
+        /(<script\s*?[^>]*?)\s*\bgenerics\s*=\s*(?:(["'`])[^"'`]*\2|[^ >]+)([^>]*>)/g,
+        "$1$3"
+      )
   );
 
   if (maps) {
